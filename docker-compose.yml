@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: medusa_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - pgstoredata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  redis:
+    image: redis:8
+    container_name: medusa_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisstoredata:/data
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    restart: always
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+
+volumes:
+  pgstoredata:
+  redisstoredata:
